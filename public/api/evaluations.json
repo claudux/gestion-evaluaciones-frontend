@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "subject": "Matemáticas Avanzadas",
+    "copies": 35,
+    "examDate": "2026-08-10",
+    "status": "Publicada"
+  },
+  {
+    "id": 2,
+    "subject": "Historia Universal",
+    "copies": 20,
+    "examDate": "2026-08-12",
+    "status": "Pendiente"
+  },
+  {
+    "id": 3,
+    "subject": "Programación en Java",
+    "copies": 50,
+    "examDate": "2026-07-01",
+    "status": "Completa"
+  },
+  {
+    "id": 4,
+    "subject": "Bases de Datos",
+    "copies": 40,
+    "examDate": "2026-08-18",
+    "status": "Pendiente"
+  },
+  {
+    "id": 5,
+    "subject": "Ingeniería de Software",
+    "copies": 45,
+    "examDate": "2026-08-22",
+    "status": "Pendiente"
+  },
+  {
+    "id": 6,
+    "subject": "Arquitectura de Sistemas",
+    "copies": 30,
+    "examDate": "2026-08-25",
+    "status": "Publicada"
+  },
+  {
+    "id": 7,
+    "subject": "Estructuras de Datos",
+    "copies": 55,
+    "examDate": "2026-07-15",
+    "status": "Completa"
+  },
+  {
+    "id": 8,
+    "subject": "Inteligencia Artificial",
+    "copies": 25,
+    "examDate": "2026-09-05",
+    "status": "Pendiente"
+  },
+  {
+    "id": 9,
+    "subject": "Física Cuántica",
+    "copies": 15,
+    "examDate": "2026-09-10",
+    "status": "Publicada"
+  },
+  {
+    "id": 10,
+    "subject": "Cálculo Multivariable",
+    "copies": 60,
+    "examDate": "2026-07-28",
+    "status": "Completa"
+  }
+]

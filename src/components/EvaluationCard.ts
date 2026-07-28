@@ -3,9 +3,12 @@ import './EvaluationCard.css';
 
 /**
  * Función Pura: Genera el marcado HTML para una sola tarjeta de evaluación.
+ * Utiliza clases semánticas y BEM-like para fácil estilización.
+ * @param evaluation Objeto que cumple con el contrato de la interfaz Evaluation.
+ * @returns {string} String con marcado HTML seguro.
  */
 export function createEvaluationCard(evaluation: Evaluation): string {
-    // Determinamos la clase CSS del distintivo
+    // Asignación dinámica de clases para el distintivo (Badge) de estado
     const badgeClass =
         evaluation.status === "Publicada"
             ? "badge-published"
@@ -14,7 +17,7 @@ export function createEvaluationCard(evaluation: Evaluation): string {
                 : "badge-completed";
 
     return `
-    <article class="evaluation-card">
+    <article class="evaluation-card glass-panel fade-in">
       <header class="card-header">
         <h3>${evaluation.subject}</h3>
         <span class="badge ${badgeClass}">
@@ -22,22 +25,34 @@ export function createEvaluationCard(evaluation: Evaluation): string {
         </span>
       </header>
       <div class="card-body">
-        <p><strong>Copias solicitadas:</strong> ${evaluation.copies}</p>
-        <p><strong>Fecha del Examen:</strong> ${evaluation.examDate}</p>
+        <div class="card-meta">
+          <span class="meta-icon">📄</span>
+          <p><strong>Copias solicitadas:</strong> ${evaluation.copies}</p>
+        </div>
+        <div class="card-meta">
+          <span class="meta-icon">📅</span>
+          <p><strong>Fecha del Examen:</strong> ${evaluation.examDate}</p>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn-action">Ver Detalles</button>
       </div>
     </article>
   `;
 }
 
 /**
- * Función Contenedora: Limpia y renderiza la lista de evaluaciones en el DOM de forma segura.
+ * Función Contenedora: Limpia y renderiza la lista de evaluaciones en el DOM.
+ * @param container Elemento del DOM donde se inyectarán las tarjetas.
+ * @param evaluations Arreglo de evaluaciones a renderizar.
  */
 export function renderEvaluationList(container: HTMLElement, evaluations: Evaluation[]): void {
     if (evaluations.length === 0) {
         container.innerHTML = `
-      <p class="empty-state">
-        No se encontraron evaluaciones que coincidan con los criterios.
-      </p>
+      <div class="empty-state glass-panel fade-in">
+        <span class="empty-icon">📭</span>
+        <p>No se encontraron evaluaciones que coincidan con los criterios de búsqueda.</p>
+      </div>
     `;
         return;
     }
