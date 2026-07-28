@@ -1,0 +1,74 @@
+/* src/components/EvaluationCard.css */
+
+.evaluation-card {
+  border: 1px solid var(--border-light);
+  padding: 20px;
+  border-radius: 8px;
+  background-color: var(--white);
+  box-shadow: 0 2px 4px rgba(0, 33, 71, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-left: 5px solid var(--primary-navy);
+}
+
+.evaluation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 33, 71, 0.08);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.card-header h3 {
+  margin: 0;
+  color: var(--primary-navy);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.card-body {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-body p {
+  margin: 0;
+}
+
+/* Badges */
+.badge {
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.badge-published {
+  background-color: rgba(46, 125, 50, 0.1);
+  color: #2e7d32;
+  border: 1px solid rgba(46, 125, 50, 0.2);
+}
+
+.badge-pending {
+  background-color: rgba(237, 108, 2, 0.1);
+  color: #ed6c02;
+  border: 1px solid rgba(237, 108, 2, 0.2);
+}
+
+.badge-completed {
+  background-color: rgba(2, 136, 209, 0.1);
+  color: #0288d1;
+  border: 1px solid rgba(2, 136, 209, 0.2);
+}
