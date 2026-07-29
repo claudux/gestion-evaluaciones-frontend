@@ -38,6 +38,9 @@ gestion-evaluaciones-frontend/
     ├── main.ts                # Lógica central e inicialización de la aplicación
     └── style.css              # Declaraciones CSS base (variables y resets)
 ```
+> [!NOTE]
+> **Datos Simulados (Mock Data):** De manera temporal, la carpeta `public/` contiene archivos JSON que simulan las respuestas del servidor. Esto permite emular la conexión asíncrona a la base de datos y probar el consumo de APIs mediante `fetch` de manera independiente, mientras se finaliza la integración con el backend definitivo.
+
 
 ## Requisitos Previos
 
