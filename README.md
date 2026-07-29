@@ -5,7 +5,6 @@ Este es el componente frontend del Sistema de Gestión de Evaluaciones, desarrol
 ## Interfaz de la Aplicación
 
 ![Captura de pantalla de la aplicación](images/gestion-evaluaciones-frontend.png)
-<!-- Reemplaza "ruta/a/la/imagen.png" con la ruta real de tu captura de pantalla -->
 
 ## Arquitectura y Decisiones de Diseño
 

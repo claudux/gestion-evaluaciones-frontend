@@ -82,6 +82,10 @@ async function initializeDashboard(): Promise<void> {
             <option value="Publicada">Publicadas</option>
             <option value="Completa">Completas</option>
           </select>
+          <select id="sort-date" class="sort-date custom-select" style="margin-left: 10px;">
+            <option value="ASC">Más recientes primero</option>
+            <option value="DESC">Más antiguas primero</option>
+          </select>
         </div>
       </header>
 
@@ -105,12 +109,10 @@ async function initializeDashboard(): Promise<void> {
                 <input type="date" id="examDate" name="examDate" required />
               </div>
               <div class="form-group">
-                <label for="status">Estado Inicial</label>
-                <select id="status" name="status" class="custom-select">
-                  <option value="Pendiente">Pendiente</option>
-                  <option value="Publicada">Publicada</option>
-                  <option value="Completa">Completa</option>
-                </select>
+                <label>Estado Inicial</label>
+                <div style="margin-top: 0.5rem;">
+                  <span class="badge badge-pending">Pendiente</span>
+                </div>
               </div>
               <button type="submit" class="btn-submit">
                 <span>Registrar Evaluación</span>
@@ -149,8 +151,6 @@ async function initializeDashboard(): Promise<void> {
   // 3.4. Petición Asíncrona de Datos
   const data = await fetchEvaluations();
 
-  // 3.5. Renderizado Inicial
-  renderEvaluationList(listContainer, data);
 
   // ============================================================================
   // 4. LÓGICA DE FILTRADO REACTIVO
@@ -158,11 +158,19 @@ async function initializeDashboard(): Promise<void> {
   const updateFilteredList = () => {
     const searchTerm = searchInput?.value.toLowerCase().trim() || "";
     const selectedStatus = statusFilter?.value || "TODAS";
+    const sortDateSelect = document.getElementById("sort-date") as HTMLSelectElement | null;
+    const sortDate = sortDateSelect?.value || "ASC";
 
     const filtered = data.filter((item) => {
       const matchesSearch = item.subject.toLowerCase().includes(searchTerm);
       const matchesStatus = selectedStatus === "TODAS" || item.status === selectedStatus;
       return matchesSearch && matchesStatus;
+    });
+
+    filtered.sort((a, b) => {
+      const dateA = new Date(a.examDate).getTime();
+      const dateB = new Date(b.examDate).getTime();
+      return sortDate === "ASC" ? dateA - dateB : dateB - dateA;
     });
 
     renderEvaluationList(listContainer, filtered);
@@ -171,6 +179,11 @@ async function initializeDashboard(): Promise<void> {
   // Asignación de Listeners para filtrado dinámico
   searchInput?.addEventListener("input", updateFilteredList);
   statusFilter?.addEventListener("change", updateFilteredList);
+  const sortDateSelect = document.getElementById("sort-date") as HTMLSelectElement | null;
+  sortDateSelect?.addEventListener("change", updateFilteredList);
+
+  // 3.5. Renderizado Inicial con filtros aplicados
+  updateFilteredList();
 
   // ============================================================================
   // 5. MANEJO DEL FORMULARIO Y VALIDACIONES (DOM Seguro)
@@ -185,12 +198,11 @@ async function initializeDashboard(): Promise<void> {
       const subjectInput = document.getElementById("subject") as HTMLInputElement;
       const copiesInput = document.getElementById("copies") as HTMLInputElement;
       const dateInput = document.getElementById("examDate") as HTMLInputElement;
-      const statusSelect = document.getElementById("status") as HTMLSelectElement;
 
       const subject = subjectInput.value.trim();
       const copies = parseInt(copiesInput.value, 10);
       const examDate = dateInput.value;
-      const status = statusSelect.value as EvaluationStatus;
+      const status = "Pendiente" as EvaluationStatus;
 
       // Validación estricta de reglas de negocio
       if (!subject || !examDate) {
