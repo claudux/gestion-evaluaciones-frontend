@@ -16,6 +16,16 @@ export function createEvaluationCard(evaluation: Evaluation): string {
                 ? "badge-pending"
                 : "badge-completed";
 
+    // Determinar el marcado del botón de acción según el estado de la evaluación
+    let actionButtonHtml = "";
+    if (evaluation.status === "Completa") {
+        actionButtonHtml = `<button class="btn-action btn-printed" disabled>Impreso</button>`;
+    } else if (evaluation.status === "Publicada") {
+        actionButtonHtml = `<button class="btn-action btn-print-active btn-pulse-highlight" data-id="${evaluation.id}">Imprimir</button>`;
+    } else {
+        actionButtonHtml = `<button class="btn-action btn-pending-print" disabled>Por Imprimir</button>`;
+    }
+
     return `
     <article class="evaluation-card glass-panel fade-in">
       <header class="card-header">
@@ -35,7 +45,7 @@ export function createEvaluationCard(evaluation: Evaluation): string {
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn-action">Ver Detalles</button>
+        ${actionButtonHtml}
       </div>
     </article>
   `;

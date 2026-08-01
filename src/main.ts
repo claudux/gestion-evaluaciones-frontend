@@ -102,7 +102,7 @@ async function initializeDashboard(): Promise<void> {
               </div>
               <div class="form-group">
                 <label for="copies">Número de Copias</label>
-                <input type="number" id="copies" name="copies" min="1" placeholder="Ej. 40" required />
+                <input type="number" id="copies" name="copies" min="1" max="50" placeholder="Ej. 40" required />
               </div>
               <div class="form-group">
                 <label for="examDate">Fecha del Examen</label>
@@ -182,6 +182,19 @@ async function initializeDashboard(): Promise<void> {
   const sortDateSelect = document.getElementById("sort-date") as HTMLSelectElement | null;
   sortDateSelect?.addEventListener("change", updateFilteredList);
 
+  // Delegación de eventos para la acción de impresión en las tarjetas
+  listContainer.addEventListener("click", (e: MouseEvent) => {
+    const target = e.target as HTMLElement | null;
+    if (target && target.classList.contains("btn-print-active")) {
+      const id = Number(target.getAttribute("data-id"));
+      const evaluation = data.find((item) => item.id === id);
+      if (evaluation) {
+        evaluation.status = "Completa";
+        updateFilteredList();
+      }
+    }
+  });
+
   // 3.5. Renderizado Inicial con filtros aplicados
   updateFilteredList();
 
@@ -189,39 +202,85 @@ async function initializeDashboard(): Promise<void> {
   // 5. MANEJO DEL FORMULARIO Y VALIDACIONES (DOM Seguro)
   // ============================================================================
   if (addEvaluationForm) {
+    const subjectInput = document.getElementById("subject") as HTMLInputElement;
+    const copiesInput = document.getElementById("copies") as HTMLInputElement;
+    const dateInput = document.getElementById("examDate") as HTMLInputElement;
+
+    // Escuchar interacciones para limpiar estilos de error individualmente
+    const setupInputErrorClear = (input: HTMLInputElement) => {
+      const clearError = () => {
+        input.classList.remove("input-error-blink");
+        const hasRemainingErrors = [subjectInput, copiesInput, dateInput].some(el =>
+          el.classList.contains("input-error-blink")
+        );
+        if (!hasRemainingErrors && formError) {
+          formError.classList.remove("visible");
+        }
+      };
+      input.addEventListener("input", clearError);
+      input.addEventListener("change", clearError);
+    };
+
+    if (subjectInput && copiesInput && dateInput) {
+      setupInputErrorClear(subjectInput);
+      setupInputErrorClear(copiesInput);
+      setupInputErrorClear(dateInput);
+    }
+
     addEvaluationForm.addEventListener("submit", (e: SubmitEvent) => {
       e.preventDefault(); // Previene recarga de página
 
-      if (formError) formError.textContent = "";
+      // Limpieza inicial de estados de error visuales
+      subjectInput.classList.remove("input-error-blink");
+      copiesInput.classList.remove("input-error-blink");
+      dateInput.classList.remove("input-error-blink");
+      if (formError) {
+        formError.textContent = "";
+        formError.classList.remove("visible");
+      }
 
-      // Extracción estructurada y segura de valores
-      const subjectInput = document.getElementById("subject") as HTMLInputElement;
-      const copiesInput = document.getElementById("copies") as HTMLInputElement;
-      const dateInput = document.getElementById("examDate") as HTMLInputElement;
-
+      // Extracción estructurada y limpia de valores
       const subject = subjectInput.value.trim();
-      const copies = parseInt(copiesInput.value, 10);
+      const copiesRaw = copiesInput.value.trim();
+      const copies = parseInt(copiesRaw, 10);
       const examDate = dateInput.value;
       const status = "Pendiente" as EvaluationStatus;
 
-      // Validación estricta de reglas de negocio
-      if (!subject || !examDate) {
-        if (formError) {
-          formError.textContent = "⚠️ Error: Asignatura y Fecha son campos obligatorios.";
-          formError.classList.add("visible");
-        }
-        return;
+      const invalidInputs: HTMLInputElement[] = [];
+      const errorMessages: string[] = [];
+
+      // 1. Validación de Asignatura (Prioridad 1)
+      if (!subject) {
+        invalidInputs.push(subjectInput);
+        subjectInput.classList.add("input-error-blink");
+        errorMessages.push("La Asignatura es requerida");
       }
 
-      if (isNaN(copies) || copies <= 0) {
+      // 2. Validación del Número de Copias (Rango 1 a 50) (Prioridad 2)
+      if (!copiesRaw || isNaN(copies) || copies < 1 || copies > 50) {
+        invalidInputs.push(copiesInput);
+        copiesInput.classList.add("input-error-blink");
+        errorMessages.push("El número de copias debe estar entre 1 y 50");
+      }
+
+      // 3. Validación de Fecha del Examen (Prioridad 3)
+      if (!examDate) {
+        invalidInputs.push(dateInput);
+        dateInput.classList.add("input-error-blink");
+        errorMessages.push("La fecha del examen es requerida");
+      }
+
+      // Si se encontraron errores
+      if (invalidInputs.length > 0) {
+        // Enfoque automático al PRIMER campo con error
+        invalidInputs[0].focus();
+
         if (formError) {
-          formError.textContent = "⚠️ Error: El número de copias debe ser un entero positivo.";
+          formError.textContent = `⚠️ Error: ${errorMessages.join(". ")}.`;
           formError.classList.add("visible");
         }
         return;
       }
-      
-      if (formError) formError.classList.remove("visible");
 
       // Construcción del objeto modelo tipado
       const newEvaluation: Evaluation = {
@@ -234,12 +293,10 @@ async function initializeDashboard(): Promise<void> {
 
       // Mutación controlada del estado y re-renderizado
       data.unshift(newEvaluation); // Añadimos al principio para visibilidad inmediata
-      updateFilteredList(); 
-      
-      // Limpieza de inputs
+      updateFilteredList();
+
+      // Limpieza de inputs y estados
       addEvaluationForm.reset();
-      
-      // Feedback visual opcional: podríamos agregar un toast aquí en el futuro.
     });
   }
 }
