@@ -5,16 +5,40 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  border-left: 6px solid var(--accent-cyan);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-left: 5px solid var(--accent-cyan);
+  transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out);
   position: relative;
   overflow: hidden;
+  will-change: transform;
 }
 
-.evaluation-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.05);
-  border-left-color: var(--accent-gold);
+@media (hover: hover) and (pointer: fine) {
+  .evaluation-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(11, 19, 43, 0.12), 0 4px 8px rgba(11, 19, 43, 0.04);
+    border-left-color: var(--accent-gold);
+  }
+}
+
+.evaluation-card:active {
+  transform: scale(0.985);
+}
+
+/* Stagger Entrance */
+.stagger-card {
+  opacity: 0;
+  animation: fadeInCard 240ms var(--ease-out) forwards;
+}
+
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .card-header {
@@ -70,10 +94,15 @@
   font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: transform 160ms var(--ease-out), background-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  border: 1px solid transparent;
+}
+
+.btn-action:active {
+  transform: scale(0.96);
 }
 
 /* Botones Deshabilitados (Impreso / Por Imprimir) */
@@ -88,42 +117,30 @@
 .btn-printed {
   background: rgba(2, 136, 209, 0.1);
   color: #0277bd;
-  border: 1px solid rgba(2, 136, 209, 0.3);
+  border-color: rgba(2, 136, 209, 0.3);
 }
 
 .btn-pending-print {
   background: rgba(237, 108, 2, 0.1);
   color: #d84315;
-  border: 1px solid rgba(237, 108, 2, 0.3);
+  border-color: rgba(237, 108, 2, 0.3);
 }
 
 /* Botón Activo "Imprimir" (Publicada) */
 .btn-print-active {
   background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
   color: #ffffff;
-  border: 1px solid #2e7d32;
+  border-color: #2e7d32;
   font-weight: 700;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
 }
 
-.btn-print-active:hover {
-  background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
-  transform: translateY(-2px);
-}
-
-/* Animación de Resaltado y Parpadeo */
-@keyframes pulseHighlight {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.6), 0 4px 14px rgba(46, 125, 50, 0.3);
-    transform: scale(1);
+@media (hover: hover) and (pointer: fine) {
+  .btn-print-active:hover {
+    background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(46, 125, 50, 0.35);
   }
-  50% {
-    box-shadow: 0 0 0 10px rgba(46, 125, 50, 0), 0 6px 20px rgba(46, 125, 50, 0.5);
-    transform: scale(1.03);
-  }
-}
-
-.btn-pulse-highlight {
-  animation: pulseHighlight 1.8s ease-in-out infinite;
 }
 
 /* Badges */
@@ -160,3 +177,4 @@
   margin-bottom: 10px;
   display: block;
 }
+

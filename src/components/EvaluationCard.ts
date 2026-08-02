@@ -5,9 +5,10 @@ import './EvaluationCard.css';
  * Función Pura: Genera el marcado HTML para una sola tarjeta de evaluación.
  * Utiliza clases semánticas y BEM-like para fácil estilización.
  * @param evaluation Objeto que cumple con el contrato de la interfaz Evaluation.
+ * @param index Índice de la tarjeta en la lista para calcular el retraso de stagger.
  * @returns {string} String con marcado HTML seguro.
  */
-export function createEvaluationCard(evaluation: Evaluation): string {
+export function createEvaluationCard(evaluation: Evaluation, index: number = 0): string {
     // Asignación dinámica de clases para el distintivo (Badge) de estado
     const badgeClass =
         evaluation.status === "Publicada"
@@ -21,13 +22,15 @@ export function createEvaluationCard(evaluation: Evaluation): string {
     if (evaluation.status === "Completa") {
         actionButtonHtml = `<button class="btn-action btn-printed" disabled>Impreso</button>`;
     } else if (evaluation.status === "Publicada") {
-        actionButtonHtml = `<button class="btn-action btn-print-active btn-pulse-highlight" data-id="${evaluation.id}">Imprimir</button>`;
+        actionButtonHtml = `<button class="btn-action btn-print-active" data-id="${evaluation.id}">Imprimir</button>`;
     } else {
         actionButtonHtml = `<button class="btn-action btn-pending-print" disabled>Por Imprimir</button>`;
     }
 
+    const staggerDelay = index * 40; // 40ms stagger delay por tarjeta (Emil Kowalski rule)
+
     return `
-    <article class="evaluation-card glass-panel fade-in">
+    <article class="evaluation-card glass-panel stagger-card" style="animation-delay: ${staggerDelay}ms;">
       <header class="card-header">
         <h3>${evaluation.subject}</h3>
         <span class="badge ${badgeClass}">
@@ -67,6 +70,6 @@ export function renderEvaluationList(container: HTMLElement, evaluations: Evalua
         return;
     }
 
-    const cardsHtml = evaluations.map((item) => createEvaluationCard(item)).join("");
+    const cardsHtml = evaluations.map((item, index) => createEvaluationCard(item, index)).join("");
     container.innerHTML = cardsHtml;
 }

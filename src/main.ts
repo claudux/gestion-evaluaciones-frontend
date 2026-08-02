@@ -209,9 +209,9 @@ async function initializeDashboard(): Promise<void> {
     // Escuchar interacciones para limpiar estilos de error individualmente
     const setupInputErrorClear = (input: HTMLInputElement) => {
       const clearError = () => {
-        input.classList.remove("input-error-blink");
+        input.classList.remove("input-error-shake");
         const hasRemainingErrors = [subjectInput, copiesInput, dateInput].some(el =>
-          el.classList.contains("input-error-blink")
+          el.classList.contains("input-error-shake")
         );
         if (!hasRemainingErrors && formError) {
           formError.classList.remove("visible");
@@ -231,9 +231,9 @@ async function initializeDashboard(): Promise<void> {
       e.preventDefault(); // Previene recarga de página
 
       // Limpieza inicial de estados de error visuales
-      subjectInput.classList.remove("input-error-blink");
-      copiesInput.classList.remove("input-error-blink");
-      dateInput.classList.remove("input-error-blink");
+      subjectInput.classList.remove("input-error-shake");
+      copiesInput.classList.remove("input-error-shake");
+      dateInput.classList.remove("input-error-shake");
       if (formError) {
         formError.textContent = "";
         formError.classList.remove("visible");
@@ -252,21 +252,21 @@ async function initializeDashboard(): Promise<void> {
       // 1. Validación de Asignatura (Prioridad 1)
       if (!subject) {
         invalidInputs.push(subjectInput);
-        subjectInput.classList.add("input-error-blink");
+        subjectInput.classList.add("input-error-shake");
         errorMessages.push("La Asignatura es requerida");
       }
 
       // 2. Validación del Número de Copias (Rango 1 a 50) (Prioridad 2)
       if (!copiesRaw || isNaN(copies) || copies < 1 || copies > 50) {
         invalidInputs.push(copiesInput);
-        copiesInput.classList.add("input-error-blink");
+        copiesInput.classList.add("input-error-shake");
         errorMessages.push("El número de copias debe estar entre 1 y 50");
       }
 
       // 3. Validación de Fecha del Examen (Prioridad 3)
       if (!examDate) {
         invalidInputs.push(dateInput);
-        dateInput.classList.add("input-error-blink");
+        dateInput.classList.add("input-error-shake");
         errorMessages.push("La fecha del examen es requerida");
       }
 
